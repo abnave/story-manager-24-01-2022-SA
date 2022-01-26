@@ -3,9 +3,9 @@ require("./db/mongoose");
 const Task = require("./models/task");
 const Story = require("./models/story");
 const User = require("./models/user");
-const userRouter = require("./routers/user");
-const taskRouter = require("./routers/task");
-const storyRouter = require("./routers/story");
+const userRouter = require("./routes/user");
+const taskRouter = require("./routes/task");
+const storyRouter = require("./routes/story");
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -18,7 +18,3 @@ app.use(storyRouter);
 app.listen(port,()=>{
     console.log("Server started at PORT:" + port);
 });
-
-//const User = require("./models/user");
-
-//demo();
