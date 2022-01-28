@@ -6,10 +6,13 @@ const storySchema = new mongoose.Schema({
         type: String,
         trim : true,
     }, 
-    likes : {
-        type : Number,
-        default : 0,
-    },
+    likes : [{
+        givenBy : {
+            type : mongoose.Schema.Types.ObjectId,
+            required : true,
+            ref: 'User'
+        }
+    }],
     comments: [{
         comment : {
             type: String

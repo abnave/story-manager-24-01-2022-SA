@@ -72,6 +72,19 @@ function addComment(req,res){
         res.status(500).send({"error":"Bad request"});
     }
 }
+function toggleLike(req,res){
+    try {
+        storyServices.toggleLike(req,(successData)=>{
+            res.status(201).send(successData);
+        },(errorData)=>{
+            res.status(400).send(errorData);
+        })
+        
+    } catch (error) {
+        res.status(500).send({"error":"Bad request"});
+    }
+}
+
 function deleteStory(req,res){
     try {
         storyServices.deleteStory(req,(successData)=>{
@@ -93,4 +106,5 @@ module.exports.getUserStories = getUserStories;
 module.exports.getStory = getStory;
 module.exports.updateStory = updateStory;
 module.exports.addComment = addComment;
+module.exports.toggleLike = toggleLike;
 module.exports.deleteStory = deleteStory;

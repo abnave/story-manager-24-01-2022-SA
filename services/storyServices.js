@@ -98,6 +98,35 @@ async function addComment(req,successData,errorData){
        return errorData({"error":error});
     }
 }
+async function toggleLike(req,successData,errorData){
+    try {
+        let result = "";
+        const _id = req.params.id;
+        const story = await Story.findById(_id);
+        if(!story){
+            throw new Error();
+        }
+        const like = {
+            givenBy: req.user._id
+        }
+        var found = await story.likes.find((like,index)=>{
+            if(like.givenBy.equals(req.user._id)){
+                story.likes.splice(index,1);
+                return true;
+            }
+        });
+        if(!found){
+            story.likes = story.likes.concat(like);
+            result = "Added like";   
+        }else{
+            result = "Removed like";
+        }
+        await story.save();              
+        return successData({result});
+    } catch (error) {
+       return errorData({"error":error});
+    }
+}
 async function deleteStory(req,successData,errorData){
     try {
         const _id = req.params.id;
@@ -118,4 +147,5 @@ exports.getUserStories = getUserStories;
 exports.getStory = getStory;
 exports.updateStory = updateStory;
 exports.addComment = addComment;
+exports.toggleLike = toggleLike;
 exports.deleteStory = deleteStory;

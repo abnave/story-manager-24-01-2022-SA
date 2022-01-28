@@ -9,6 +9,7 @@ router.get("/stories/me", checkAuth, storyController.getUserStories);
 router.get("/stories/:id", checkAuth, storyController.getStory);
 router.patch("/stories/:id", checkAuth, storyController.updateStory);
 router.post("/stories/:id/comment", checkAuth, storyController.addComment);
+router.post("/stories/:id/toggleLike", checkAuth, storyController.toggleLike);
 router.delete("/stories/:id", checkAuth, storyController.deleteStory);
 
 module.exports = router
