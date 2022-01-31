@@ -25,8 +25,23 @@ async function getAllStories(req,successData,errorData){
 }
 async function getUserStories(req,successData,errorData){
     try {
+        const match = {};
+        const sort = {};
         const user = await User.findById(req.user._id);
-        await user.populate("stories").execPopulate();
+        match.description = "I am SpiderMan, the oldest Avenger";
+        if(req.query.sortBy){
+            const parts = req.query.sortBy.split(":");
+            sort[parts[0]] = parts[1]==="desc"?-1:1;
+        }
+        await user.populate({
+            path: "stories",
+            //match
+            options: {
+                limit : parseInt(req.query.limit),
+                skip : parseInt(req.query.skip),
+                sort
+            }
+        }).execPopulate();
         console.log(user.stories);
         if(!user.stories){
             return successData("Story not found");
