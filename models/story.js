@@ -13,16 +13,21 @@ const storySchema = new mongoose.Schema({
             ref: 'User'
         }
     }],
-    comments: [{
-        comment : {
-            type: String
-        },
-        author : {
-            type : mongoose.Schema.Types.ObjectId,
-            required : true,
-            ref: 'User'
-        }
-    }],
+    // comments: [{
+    //     commentId : {
+    //         type: mongoose.Schema.Types.ObjectId
+    //     }
+    // }],
+    // comments: [{
+    //     comment : {
+    //         type: String
+    //     },
+    //     author : {
+    //         type : mongoose.Schema.Types.ObjectId,
+    //         required : true,
+    //         ref: 'User'
+    //     }
+    // }],
     author : {
         type : mongoose.Schema.Types.ObjectId,
         required : true,
@@ -31,6 +36,14 @@ const storySchema = new mongoose.Schema({
 }, {    
     timestamps: true
 })
+
+storySchema.virtual('allComments', {
+    ref: 'Comment',
+    localField: '_id',
+    foreignField: 'storyId',
+});
+
+
 const Story = mongoose.model('Story', storySchema)
 
 module.exports = Story

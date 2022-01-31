@@ -1,5 +1,6 @@
 const Story = require("../models/story");
 const User = require("../models/user");
+const Comment = require("../models/comment");
 
 
 async function createStory(req,successData,errorData){
@@ -75,6 +76,10 @@ async function updateStory(req,successData,errorData){
 async function addComment(req,successData,errorData){
     try {
         const _id = req.params.id;
+        const story = await Story.findById(_id);    
+        if(!story){
+            throw new Error("Story not found");
+        }
         const updates = Object.keys(req.body);
         const allowedUpdates = ["comment"];
         const isValidUpdation = updates.every((update)=>{
@@ -82,20 +87,18 @@ async function addComment(req,successData,errorData){
         })
         if(!isValidUpdation){
             return errorData({"Error": "Invalid Updates"})
-        }
-        const story = await Story.findById(_id);
-        if(!story){
-            throw new Error();
-        }
-        const comment = {
+        } 
+        const newComment = new Comment({
             ...req.body,
-            author: req.user._id
-        }
-        story.comments = story.comments.concat(comment);
-        await story.save();      
-        return successData(story);
+            author: req.user._id,
+            storyId: _id
+        });
+        await newComment.save();  
+        await story.populate("allComments").execPopulate();
+        console.log(story.allComments);
+        return successData(story.allComments);
     } catch (error) {
-       return errorData({"error":error});
+       return errorData({"error":error.message});
     }
 }
 async function toggleLike(req,successData,errorData){
@@ -121,7 +124,7 @@ async function toggleLike(req,successData,errorData){
         }else{
             result = "Removed like";
         }
-        await story.save();              
+        await story.save();             
         return successData({result});
     } catch (error) {
        return errorData({"error":error});
@@ -140,7 +143,6 @@ async function deleteStory(req,successData,errorData){
        return errorData({"error":error});
     }
 }
-
 exports.createStory = createStory;
 exports.getAllStories = getAllStories;
 exports.getUserStories = getUserStories;
