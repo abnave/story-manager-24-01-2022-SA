@@ -1,5 +1,5 @@
 const User = require("../models/user");
-const auth = require("../middleware/auth");
+const sharp = require("sharp");
 
 async function signin(req,successData,errorData){
     try {
@@ -90,11 +90,49 @@ async function logoutAllSession(req,successData,errorData){
         return errorData({"result":"Bad request"});
     }
 }
+async function uploadAvatar(req,successData,errorData){
+    try {  
+        const buffer = await sharp(req.file.buffer).resize({width:250 , height:250}).png().toBuffer();
+        req.user.avatar = buffer; 
+        await req.user.save();     
+        return successData({"result":"Avatar uploaded succesfully"});
+
+    } catch (error) {
+       return errorData({"error":error});
+    }
+}
+async function getAvatar(req,successData,errorData){
+    try { 
+        const user = await User.findById(req.params._id);
+        if(!user || !user.avatar){
+            throw new Error("Avatar not available for this User");
+        }  
+        // 
+        return successData(user.avatar);
+
+    } catch (error) {
+       return errorData({"error":error});
+    }
+}
+async function deleteAvatar(req,successData,errorData){
+    try {  
+        req.user.avatar = []; 
+        await req.user.save();     
+        return successData({"result":"Avatar Deleted succesfully"});
+
+    } catch (error) {
+       return errorData({"error":error});
+    }
+}
+
 exports.signin = signin;
 exports.login = login;
 exports.getUserDetails = getUserDetails;
 exports.getAllUsers = getAllUsers;
 exports.updateUser = updateUser;
+exports.uploadAvatar = uploadAvatar;
+exports.getAvatar = getAvatar;
+exports.deleteAvatar = deleteAvatar;
 exports.deleteUser = deleteUser;
 exports.logout = logout;
 exports.logoutAllSession = logoutAllSession;

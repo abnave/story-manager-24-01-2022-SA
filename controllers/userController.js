@@ -90,6 +90,40 @@ function logoutAllSession(req,res){
         res.status(500).send({"result":"Bad request"});
     }
 }
+function uploadAvatar(req,res){
+    try {
+        userServices.uploadAvatar(req,(successData)=>{
+            res.status(200).send(successData);
+        },(errorData)=>{
+            res.status(400).send(errorData);
+        })
+    } catch (error) {
+        res.status(500).send({"result":"Bad request"});
+    }
+}
+function getAvatar(req,res){
+    try {
+        userServices.getAvatar(req,(successData)=>{
+            res.set("Content-Type","image/png"); 
+            res.status(200).send(successData);
+        },(errorData)=>{
+            res.status(400).send(errorData);
+        })
+    } catch (error) {
+        res.status(500).send({"result":"Bad request"});
+    }
+}
+function deleteAvatar(req,res){
+    try {
+        userServices.deleteAvatar(req,(successData)=>{
+            res.status(200).send(successData);
+        },(errorData)=>{
+            res.status(400).send(errorData);
+        })
+    } catch (error) {
+        res.status(500).send({"result":"Bad request"});
+    }
+}
 
 
 module.exports.signin = signin;
@@ -97,6 +131,9 @@ module.exports.login = login;
 module.exports.getUserDetails = getUserDetails;
 module.exports.getAllUsers = getAllUsers;
 module.exports.updateUser = updateUser;
+module.exports.getAvatar = getAvatar;
+module.exports.uploadAvatar = uploadAvatar;
+module.exports.deleteAvatar = deleteAvatar;
 module.exports.deleteUser = deleteUser;
 module.exports.logout = logout;
 module.exports.logoutAllSession = logoutAllSession;
