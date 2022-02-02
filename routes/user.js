@@ -1,4 +1,4 @@
-const express = new require("express");
+const express = require("express");
 const multer = require("multer");
 const checkAuth = require("../middleware/auth");
 const userController = require("../controllers/userController");

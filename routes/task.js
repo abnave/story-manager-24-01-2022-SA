@@ -1,4 +1,4 @@
-const express = new require("express");
+const express = require("express");
 const router = new express.Router();
 const Task = require("../models/task");
 
